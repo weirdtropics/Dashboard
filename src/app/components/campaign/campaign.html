@@ -1,0 +1,45 @@
+<div class="campaigns-dashboard">
+	 <div ng-repeat="campaign in $ctrl.campaigns | limitTo: $ctrl.limit"  class="campaign" id="campaign-{{campaign.id}}">
+		 <span class="camp-color" style="background-color: {{campaign.color}}"></span>
+		 <div class="heading">
+			 <h2>{{campaign.name}}</h2>
+			 <p class="subtitle">{{campaign.type}}</p>
+		 </div>
+		 <div class="props">
+			 <div class="prop">
+				 <p class="prop-name">Approved posts</p>
+				 <h2 class="prop-value">{{campaign.approved_posts}}</h2>
+			 </div>
+			 <div class="prop">
+				 <p class="prop-name">Influencers</p>
+				 <h2 class="prop-value">{{campaign.num_of_artists}}</h2>
+			 </div>
+			 <div class="prop">
+				 <p class="prop-name">Likes</p>
+				 <h2 class="prop-value">{{campaign.approved_likes}}</h2>
+			 </div>
+			 <div class="prop">
+				 <p class="prop-name">Comments</p>
+				 <h2 class="prop-value">{{campaign.approved_comments}}</h2>
+			 </div>
+		 </div>
+		 <div class="progress-status">
+			<p>{{campaign.progress}}% ({{campaign.days_passed}}/{{campaign.days_total}} days)</p>
+			 <div class="progress-line">
+				 <span style="width: {{campaign.progress}}%"></span>
+			 </div>
+		 </div>
+		 <div class="actions">
+			 <button class="hide-btn" ng-click="$ctrl.removeCampaigns(campaign.id)">HIDE</button>
+			 <a href="#!/campaign/{{campaign.id}}" class="show-btn">SHOW DETAILS</a>
+		 </div>
+
+	 </div>
+	 <div class="more-btn campaign" ng-if="$ctrl.limit < $ctrl.campaigns.length" ng-click="$ctrl.increaseLimit($ctrl.campaigns.length)">
+	 	<div>
+			<h2>+{{(($ctrl.campaigns.length - $ctrl.limit)>8)?8:($ctrl.campaigns.length - $ctrl.limit)}}</h2>
+	 		<h3>MORE TO SHOW</h3>
+		</div>
+	 </div>
+</div>
+

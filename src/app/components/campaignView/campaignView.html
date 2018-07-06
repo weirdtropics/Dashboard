@@ -1,0 +1,146 @@
+
+<div ng-init="$ctrl.accumulate()" style="padding-left: 10px" class="campaign-{{$ctrl.campaignId}}">
+
+	<div class="card-heading">Random name 2000</div>
+	<div class="filters">
+		<div class="social-filter">
+			<label class="social active" ng-click="$ctrl.activeSocial($ctrl.social.name)" id="Instagram">
+				<input style="display: none" type="radio" ng-model="$ctrl.social.name" value="Instagram" />
+				Instagram
+			</label>
+			<label class="social" ng-click="$ctrl.activeSocial($ctrl.social.name)" id="Youtube" >
+				<input style="display: none" type="radio" ng-model="$ctrl.social.name" value="Youtube" />
+				Youtube
+			</label>
+			<label class="social" ng-click="$ctrl.activeSocial($ctrl.social.name)" id="Facebook">
+				<input style="display: none" type="radio" ng-model="$ctrl.social.name" value="Facebook" />
+				Facebook
+			</label>
+			<label class="social" ng-click="$ctrl.activeSocial($ctrl.social.name)" id="Twitter">
+				<input style="display: none" type="radio" ng-model="$ctrl.social.name" value="Twitter" />
+				Twitter
+			</label>
+		</div>
+		<div class="cards-classificator">
+			<label class="classificator active" ng-click="$ctrl.pendingPosts()" id="Pending">
+				<input style="display:none" type="radio" ng-model="$ctrl.classificator.name" value="Pending">
+					Pending
+			</label>
+			<label class="classificator" ng-click="$ctrl.pendingPosts()" id="Approved">
+				<input style="display:none" type="radio" ng-model="$ctrl.classificator.name" value="Approved">
+					Approved
+			</label>
+			<label class="classificator" ng-click="$ctrl.pendingPosts()" id="Rejected">
+				<input style="display:none" type="radio" ng-model="$ctrl.classificator.name" value="Rejected">
+					Rejected
+			</label>
+		</div>
+	</div>
+	<div ng-if="$ctrl.classificator.name === 'Pending'">
+		<div class="chips-filter">
+			<md-chips ng-model="$ctrl.keywords" class="chips" readonly="$ctrl.readonly" placeholder="+ keyword" md-removable="$ctrl.removable"></md-chips>
+			<button id="filter" ng-click="$ctrl.filter($ctrl.keywords)">FILTER</button>
+		</div>
+
+		<div class="pages">
+			<p>{{$ctrl.show[0].media.length}} items in total</p>
+			 <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="./public/dirPagination.tpl.html"></dir-pagination-controls>
+		</div>
+
+		<div class="posts">
+			<div class="post" id="{{post.id}}" dir-paginate="post in $ctrl.show[0].media| filter: {social_network:$ctrl.social.name} | itemsPerPage: 4">
+			<div class="heading-title">
+				<img class="author-pic" src="{{post.author_pic}}" alt="author_pic" />
+				<div class="ht-author">
+					<h2>@{{post.author_username}}</h2>
+					<a href="{{post.link}}">{{post.social_network}}</a>
+				</div>
+			</div>
+			<div class="post-main-img">
+				<img src="{{post.pic}}" alt="post_pic" />
+				<div  class="pmi-hover">{{post.caption}}</div>
+			</div>
+			<div class="props">
+				 <div class="prop">
+					 <p class="prop-name">likes</p>
+					 <h2 class="prop-value">{{post.likes_number}}</h2>
+				 </div>
+				 <div class="prop">
+					 <p class="prop-name">comments</p>
+					 <h2 class="prop-value">{{post.comments_number}}</h2>
+				 </div>
+			</div>
+			<div class="actions">
+			 <button class="show-btn" ng-click="$ctrl.approvePost(post.id, $ctrl.show[0].media, $ctrl.approved[0].media);">APPROVE</button>
+			 <button class="hide-btn" ng-click="$ctrl.approvePost(post.id, $ctrl.show[0].media, $ctrl.rejected[0].media);">REJECT</button>
+		 	</div>
+		</div>
+		</div>
+	</div>
+	<div ng-if="$ctrl.classificator.name === 'Approved'" class="posts">
+
+		<div class="pages">
+			<p>{{$ctrl.approved[0].media.length}} items in total</p>
+			 <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="./public/dirPagination.tpl.html"></dir-pagination-controls>
+		</div>
+
+		<div class="post" id="{{post}}"  dir-paginate="post in $ctrl.approved[0].media| filter: {social_network:$ctrl.social.name} | itemsPerPage: 8">
+			<div class="heading-title">
+				<img class="author-pic" src="{{post.author_pic}}" alt="author_pic" />
+				<div class="ht-author">
+					<h2>@{{post.author_username}}</h2>
+					<a href="{{post.link}}">{{post.social_network}}</a>
+				</div>
+			</div>
+			<div class="post-main-img">
+				<img src="{{post.pic}}" alt="post_pic" />
+				<div  class="pmi-hover">{{post.caption}}</div>
+			</div>
+			<div class="props">
+				 <div class="prop">
+					 <p class="prop-name">likes</p>
+					 <h2 class="prop-value">{{post.likes_number}}</h2>
+				 </div>
+				 <div class="prop">
+					 <p class="prop-name">comments</p>
+					 <h2 class="prop-value">{{post.comments_number}}</h2>
+				 </div>
+			</div>
+			<div class="actions">
+			 <button  class="hide-btn" ng-click="$ctrl.approvePost(post.id, $ctrl.approved[0].media, $ctrl.rejected[0].media)">REJECT</button>
+		 	</div>
+		</div>
+	</div>
+	<div ng-if="$ctrl.classificator.name === 'Rejected'" class="posts">
+
+		<div class="pages">
+			<p>{{$ctrl.rejected[0].media.length}} items in total</p>
+			 <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="./public/dirPagination.tpl.html"></dir-pagination-controls>
+		</div>
+
+		<div class="post" id="{{post._id}}"  dir-paginate="post in $ctrl.rejected[0].media| filter: {social_network:$ctrl.social.name} | itemsPerPage: 8">
+			<div class="heading-title">
+				<img class="author-pic" src="{{post.author_pic}}" alt="author_pic" />
+				<div class="ht-author">
+					<h2>@{{post.author_username}}</h2>
+					<a href="{{post.link}}">{{post.social_network}}</a>
+				</div>
+			</div>
+			<div class="post-main-img">
+				<img src="{{post.pic}}" alt="post_pic" />
+				<div  class="pmi-hover">{{post.caption}}</div>
+			</div>
+			<div class="props">
+				 <div class="prop">
+					 <p class="prop-name">likes</p>
+					 <h2 class="prop-value">{{post.likes_number}}</h2>
+				 </div>
+				 <div class="prop">
+					 <p class="prop-name">comments</p>
+					 <h2 class="prop-value">{{post.comments_number}}</h2>
+				 </div>
+			</div>
+		</div>
+	</div>
+
+</div>
